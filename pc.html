@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>NeoCity Recruitment Portal - Futuristic</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  body {
+    margin:0;
+    font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(135deg, #0a021a, #13042a);
+    color: #ccc;
+    padding-top: 120px;
+    overflow-x: hidden;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Animated neon grid background */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg,#0ff1ce33 0 2px,transparent 2px 12px),
+      repeating-linear-gradient(90deg,#0ff1ce33 0 2px,transparent 2px 12px);
+    animation: gridShift 10s linear infinite;
+    z-index: -2;
+  }
+
+  @keyframes gridShift {
+    0%{background-position:0 0,0 0;}
+    50%{background-position:100px 100px,100px 100px;}
+    100%{background-position:0 0,0 0;}
+  }
+
+  /* Hex menu container */
+  .menu-wrap {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 40;
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+  }
+  .hex-card {
+    width: 100px;
+    height: 110px;
+    cursor: pointer;
+    position: relative;
+    filter: drop-shadow(0 0 12px #0ff1ceaa);
+    transition: filter 0.3s, transform 0.2s;
+  }
+  .hex-card:hover {
+    transform: scale(1.05);
+  }
+  .hex-card.active {
+    filter: drop-shadow(0 0 26px #fcf85fdd);
+    transform: scale(1.1);
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+  polygon.hex-shape {
+    fill: #0ff1ce22;
+    stroke: #0ff1ce;
+    stroke-width: 4;
+    filter: drop-shadow(0 0 16px #0ff1ce88);
+    animation: neonGlow 3.2s ease-in-out infinite alternate;
+  }
+  polygon.hex-shape.active {
+    fill: #fcf85f55;
+    stroke: #fcf85f;
+    filter: drop-shadow(0 0 28px #fcf85fcc);
+    animation: neonGlowStrong 2.3s ease-in-out infinite alternate;
+  }
+  @keyframes neonGlow {
+    0% {filter: drop-shadow(0 0 12px #0ff);stroke-width:3;}
+    100% {filter: drop-shadow(0 0 26px #0ffdff);stroke-width:5;}
+  }
+  @keyframes neonGlowStrong {
+    0% {filter: drop-shadow(0 0 22px #fcf85f);stroke-width:4;}
+    100% {filter: drop-shadow(0 0 38px #fff67c);stroke-width:6;}
+  }
+  .hex-text {
+    fill: #0ff1ce;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    dominant-baseline: middle;
+    text-anchor: middle;
+    user-select: none;
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  .hex-card.active .hex-text {
+    fill: #fcf85f;
+    filter: drop-shadow(0 0 9px #fcf85fcc);
+  }
+  @media (max-width: 600px) {
+    .hex-card {
+      width: 70px;
+      height: 80px;
+    }
+    .hex-text {
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+  }
+
+  /* Main content sections */
+  .section {
+    max-width: 750px;
+    margin: 32px auto;
+    padding: 48px 30px;
+    background: rgba(16, 14, 51, 0.75);
+    border-radius: 22px;
+    box-shadow: 0 0 40px #0ff1ce99 inset, 0 0 160px #812fbb33 inset;
+    color: #d2cee9cc;
+  }
+  h1, h2, h3 {
+    font-family: 'Orbitron', monospace;
+    color: #fcf85f;
+    text-align: center;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 20px #0ff1ceaa;
+    margin-bottom: 12px;
+  }
+  h1 {font-size: 3.0rem;}
+  h2 {font-size: 2.0rem;}
+  h3 {font-size: 1.3rem;}
+  p, ul {
+    line-height: 1.6;
+    color: #d2cee9;
+    font-size: 1.1rem;
+    max-width: 525px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  ul {
+    margin-left: 20px;
+    margin-bottom: 30px;
+    color: #91f9ffcc;
+  }
+  li {
+    padding-left: 6px;
+    margin-bottom: 8px;
+  }
+  /* New form styling */
+  form {
+    max-width: 500px;
+    margin: 12px auto 0;
+    font-size: 1.1rem;
+  }
+  label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fcf85fcc;
+    font-weight: 600;
+  }
+  label > span {
+    margin-bottom: 2px;
+    display: block;
+  }
+  input[type="text"],
+  select {
+    width: 100%;
+    background: transparent;
+    border: 2px solid #0ff1ceaa;
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #ccfbff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #fcf85f;
+    box-shadow: 0 0 10px #fcf85f88;
+    background: rgba(128, 128, 128, 0.07);
+  }
+  /* Traits cards */
+  .traits-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0 30px;
+  }
+  .trait-card {
+    border-radius: 15px;
+    border: 2px solid #0ff1cebb;
+    padding: 18px 22px;
+    min-width: 110px;
+    color: #91f9ffcc;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    font-family: 'Orbitron', monospace;
+    transition: all 0.3s;
+    background: radial-gradient(circle at 50% 50%, #0ff1ce20 0%, transparent 90%);
+    box-shadow: 0 0 12px #0ff1cea8 inset;
+  }
+  .trait-card:hover {
+    background: radial-gradient(circle at 50% 50%, #fcf85f55 0%, transparent 90%);
+    box-shadow: 0 0 28px #fcf85fdd inset;
+    color: #fcf85f;
+    border-color: #fcf85fdd;
+  }
+  .trait-card input[type="radio"] { display: none; }
+  .trait-card input[type="radio"]:checked + span {
+    background: radial-gradient(circle at 50% 50%, #fcf85fbb 0%, transparent 90%);
+    box-shadow: 0 0 36px #fcf85fee inset;
+    color: #fcf85f;
+  }
+  .btn-primary {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px 0;
+    font-weight: 700;
+    font-size: 1.2rem;
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(90deg, #fcf85f 20%, #0ff1ce 80%);
+    color: #1a1a1a;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 0 26px #21f1de88;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 0 44px #fcf85fdb, 0 0 66px #0ff1cea6;
+  }
+  #previewOutput {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #fcf85f;
+    margin-top: 18px;
+    min-height: 44px;
+    text-shadow: 0 0 8px #00ced1, 0 0 24px #ffa;
+  }
+
+  /* Suits Buttons */
+  .suits-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-bottom: 30px;
+  }
+  .suits-buttons button {
+    background: transparent;
+    border: 2.5px solid #0ff1cedd;
+    border-radius: 22px;
+    color: #0ff1cedd;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.13rem;
+    padding: 14px 28px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #0ff1ceaa;
+    transition: all 0.3s ease;
+  }
+  .suits-buttons button.active,
+  .suits-buttons button:hover {
+    border-color: #fcf85fdd;
+    color: #fcf85fdd;
+    box-shadow: 0 0 40px #fcf85fff, 0 0 65px #0ff1cedd;
+    background: rgba(252,248,95,0.16);
+  }
+  /* Suits gallery as neon cards */
+  .suits-gallery {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .suit-card {
+    width: 185px;
+    height: 270px;
+    background: radial-gradient(circle at 50% 40%, #0ff1ce11 0%, transparent 75%);
+    border-radius: 28px;
+    border: 3px solid #0ff1ce;
+    box-shadow: 0 0 35px #0ff1ce88 inset;
+    cursor: pointer;
+    transition: box-shadow 0.3s, border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .suit-card:hover {
+    border-color: #fcf85fc7;
+    box-shadow: 0 0 48px #fcf85fff inset;
+  }
+  /* Example stylized suit shape and text instead of images */
+  .suit-icon {
+    margin-top: 20px;
+    width: 80px;
+    height: 80px;
+    stroke: #0ff1ce;
+    fill: none;
+    filter: drop-shadow(0 0 6px #0ff);
+    stroke-width: 2.8;
+    stroke-linejoin: round;
+  }
+  .suit-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.17rem;
+    text-align: center;
+    margin-bottom: 18px;
+    color: #0ff1cedd;
+    letter-spacing: 0.08em;
+    user-select: none;
+  }
+  .suit-description {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: #9cf3ffcc;
+    text-align: center;
+    padding: 0 1em 1.2em;
+  }
+
+</style>
+</head>
+<body>
+<!-- Hexagonal Neon Navigation -->
+<nav class="menu-wrap" role="navigation" aria-label="Main navigation">
+  <div class="hex-card active" data-target="home" tabindex="0" role="link" aria-label="Go to Home page">
+    <svg viewBox="0 0 100 115" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <polygon class="hex-shape" points="50 3 93 27 93 83 50 108 7 83 7 27"></polygon>
+      <text class="hex-text" x="50" y="60">HOME</text>
+    </svg>
+  </div>
+  <div class="hex-card" data-target="lore" tabindex="0" role="link" aria-label="Go to Lore page">
+    <svg viewBox="0 0 100 115" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <polygon class="hex-shape" points="50 3 93 27 93 83 50 108 7 83 7 27"></polygon>
+      <text class="hex-text" x="50" y="60">LORE</text>
+    </svg>
+  </div>
+  <div class="hex-card" data-target="apply" tabindex="0" role="link" aria-label="Go to Apply page">
+    <svg viewBox="0 0 100 115" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <polygon class="hex-shape" points="50 3 93 27 93 83 50 108 7 83 7 27"></polygon>
+      <text class="hex-text" x="50" y="60">APPLY</text>
+    </svg>
+  </div>
+  <div class="hex-card" data-target="suits" tabindex="0" role="link" aria-label="Go to Gang Suits page">
+    <svg viewBox="0 0 100 115" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <polygon class="hex-shape" points="50 3 93 27 93 83 50 108 7 83 7 27"></polygon>
+      <text class="hex-text" x="50" y="60">SUITS</text>
+    </svg>
+  </div>
+  <div class="hex-card" data-target="guns" tabindex="0" role="link" aria-label="Go to Guns page">
+    <svg viewBox="0 0 100 115"><polygon class="hex-shape" points="50 3 93 27 93 83 50 108 7 83 7 27"></polygon>
+      <text class="hex-text" x="50" y="60">GUNS</text>
+    </svg>
+  </div>
+  <div class="hex-card" data-target="location" tabindex="0" role="link" aria-label="Go to Map/Location page">
+    <svg viewBox="0 0 100 115"><polygon class="hex-shape" points="50 3 93 27 93 83 50 108 7 83 7 27"></polygon>
+      <text class="hex-text" x="50" y="60">MAP</text>
+    </svg>
+  </div>
+</nav>
+
+<!-- Sections -->
+<section id="home" class="section" tabindex="-1">
+  <div class="hero-panel">
+    <h1>NEOCITY DARKWEB RECRUITMENT</h1>
+    <p>
+      Welcome, cyber-strider! NeoCity beckons: its alleys shimmer with data streams and electric secrets.
+      Four crime clans watch from their glass towers, their neon banners ruling the underground. Tonight, their eyes are on you.<br/><br/>
+      <strong>Why join a NeoCity syndicate?</strong>
+    </p>
+    <ul>
+      <li>Access hidden networks, credits, and illegal tech.</li>
+      <li>Rise from street walker to syndicate legend—if you survive.</li>
+      <li>Wield virtual power and real danger: city hacks, cold cash, street fame.</li>
+      <li>Shape NeoCity's story by controlling what the law ignores.</li>
+      <li>Choose your path: ghost, bruiser, hacker, or kingpin.</li>
+    </ul>
+    <div class="btns"><a href="#lore">Explore Lore</a><a href="#apply">Apply Now</a></div>
+  </div>
+</section>
+
+<section id="lore" class="section" tabindex="-1">
+  <div class="lore-panel">
+    <h2>The Lore of NeoCity</h2>
+    <div class="lore-section">
+      <h3>Syndicates and Shadows</h3>
+      <p>Beneath the corporate towers, NeoCity's gangs rule like nations: the Circuitphage Hackers, the Razor Bruisers, the Night Runners, and the Violet Kings. Their members wear glitches as badges—your reputation is nothing without scars and exploits. Alignment can shift with a single hack or betrayal.</p>
+    </div>
+    <div class="lore-section">
+      <h3>Ancient Rituals, Modern Tech</h3>
+      <p>Initiation means proving your loyalty. Sometimes it's running mind-bending code through the city's mainframe, sometimes it's defending turf in back-alley brawls. Old rites meet new tech: encrypted tattoos, loyalty chips in your cortex, rites livestreamed for the city to judge.</p>
+    </div>
+    <div class="lore-section">
+      <h3>Survival Protocols</h3>
+      <p>A recruit who breaks protocol faces exile into the neon wastes. Encryption masks your trace, whispers protect you from rivals, and only allies can see your true face in the data fog. Legendary hackers once turned the entire police grid into static; one runner vanished from city cams for five years.</p>
+    </div>
+    <div class="lore-section">
+      <h3>Ascension Pathways</h3>
+      <p>For a select few, reputation rises to kingpin status. Urban legends whisper of the "Neon Oracle"—an AI said to guide the best. Syndicates only respect those who master secrecy, survive betrayal, and break the system from inside.</p>
+    </div>
+    <div class="btns" style="justify-content:left;">
+      <a href="#home">Home</a><a href="#apply">Apply Now</a>
+    </div>
+  </div>
+</section>
+
+<section id="apply" class="section" tabindex="-1">
+  <div class="apply-panel">
+    <h2>Gang Recruitment Form</h2>
+    <form id="recruitForm">
+      <label for="alias"><span>Alias</span></label>
+      <input id="alias" name="alias" class="field" type="text" placeholder="GhostRunner" maxlength="20" autocomplete="off" required />
+      <div style="margin:22px 0 18px;">
+        <span style="display:block;margin-bottom:7px;font-weight:600;">Select your main trait</span>
+        <div class="traits-row">
+          <label class="trait-card"><input type="radio" name="trait" value="techie" required>
+            <span class="trait-icon">&#128187;</span><span class="trait-label">Tech skills<br><small>Hacking, coding</small></span></label>
+          <label class="trait-card"><input type="radio" name="trait" value="brute" required>
+            <span class="trait-icon">&#128308;</span><span class="trait-label">Combat<br><small>Raw strength</small></span></label>
+          <label class="trait-card"><input type="radio" name="trait" value="runner" required>
+            <span class="trait-icon">&#128694;</span><span class="trait-label">Stealth<br><small>Quick movement</small></span></label>
+          <label class="trait-card"><input type="radio" name="trait" value="charmer" required>
+            <span class="trait-icon">&#128373;</span><span class="trait-label">Influence<br><small>Talk your way out</small></span></label>
+        </div>
+      </div>
+      <label for="weapon"><span>Preferred Gadget</span></label>
+      <select id="weapon" name="weapon" required>
+        <option value="">Choose one…</option>
+        <option value="matrix">Neon Matrix (hacker console)</option>
+        <option value="pulse">Pulse Rifle</option>
+        <option value="cloaking">Cloak Module</option>
+        <option value="drone">Recon Drone</option>
+        <option value="blade">MonoBlade</option>
+      </select>
+      <label for="story"><span>Your story in one sentence</span></label>
+      <input id="story" name="story" class="field" type="text" placeholder="Describe your NeoCity legend" maxlength="90" autocomplete="off"/>
+      <div id="previewOutput"></div>
+      <button class="btn-primary" type="submit">Submit Application</button>
+    </form>
+  </div>
+</section>
+
+<section id="suits" class="section" tabindex="-1">
+  <div class="suits-panel">
+    <h2>Choose Your Gang Suit</h2>
+    <div class="suits-buttons">
+      <button class="active" data-gang="hackers">Neon Hackers</button>
+      <button data-gang="bruisers">Razor Bruisers</button>
+      <button data-gang="runners">Night Runners</button>
+    </div>
+    <div class="suits-gallery" id="gallery">
+      <!-- Futuristic style suit cards will be added here -->
+    </div>
+  </div>
+</section>
+
+<section id="guns" class="section" tabindex="-1">
+  <h2>Cyberpunk Gang Guns</h2>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap: 28px; margin-top: 16px;">
+    <!-- Futuristic styled gun icon placeholders -->
+    <div style="width: 140px; height: 180px; background: rgba(12,20,36,0.6); border-radius: 24px; box-shadow:0 0 30px #0ff1cebb inset; display:flex; flex-direction: column; align-items:center; justify-content:center; color: #0ff1ce; font-family: 'Orbitron', monospace; font-size: 1.1rem; user-select:none; cursor:pointer; transition: box-shadow 0.3s;">
+      <svg width="48" height="48" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><rect width="36" height="20" x="6" y="15" rx="5" ry="5"/><line x1="6" y1="25" x2="42" y2="25"/><polyline points="15 10 23 5 23 15"/><polyline points="29 5 29 15 37 10"/></svg>
+      <div style="margin-top: 10px;">Pulse Rifle</div>
+    </div>
+    <div style="width: 140px; height: 180px; background: rgba(12,20,36,0.6); border-radius: 24px; box-shadow:0 0 30px #fcf85fbb inset; display:flex; flex-direction: column; align-items:center; justify-content:center; color: #fcf85f; font-family: 'Orbitron', monospace; font-size: 1.1rem; user-select:none; cursor:pointer; transition: box-shadow 0.3s;">
+      <svg width="48" height="48" fill="none" stroke="#fcf85f" stroke-width="4" stroke-linecap="round"><path d="M12 40L30 22"/><rect x="24" y="12" width="12" height="36" rx="2"/></svg>
+      <div style="margin-top: 10px;">MonoBlade</div>
+    </div>
+    <div style="width: 140px; height: 180px; background: rgba(12,20,36,0.6); border-radius: 24px; box-shadow:0 0 30px #0ff1cebb inset; display:flex; flex-direction: column; align-items:center; justify-content:center; color: #0ff1ce; font-family: 'Orbitron', monospace; font-size: 1.1rem; user-select:none; cursor:pointer; transition: box-shadow 0.3s;">
+      <svg width="48" height="48" fill="none" stroke="#0ff1ce" stroke-width="3" stroke-linejoin="round"><circle cx="24" cy="24" r="12"/><line x1="24" y1="12" x2="24" y2="36"/></svg>
+      <div style="margin-top: 10px;">Recon Drone</div>
+    </div>
+    <div style="width: 140px; height: 180px; background: rgba(12,20,36,0.6); border-radius: 24px; box-shadow:0 0 30px #fcf85fbb inset; display:flex; flex-direction: column; align-items:center; justify-content:center; color: #fcf85f; font-family: 'Orbitron', monospace; font-size: 1.1rem; user-select:none; cursor:pointer; transition: box-shadow 0.3s;">
+      <svg width="48" height="48" fill="none" stroke="#fcf85f" stroke-width="3" stroke-linejoin="round"><rect x="12" y="8" width="24" height="32" rx="3"/><line x1="24" y1="8" x2="24" y2="40"/></svg>
+      <div style="margin-top: 10px;">Neon Matrix</div>
+    </div>
+  </div>
+</section>
+
+<section id="location" class="section" tabindex="-1">
+  <h2>NeoCity Map & Locations</h2>
+  <div style="background: rgba(12, 15, 26, 0.8); border-radius: 18px; padding: 30px; box-shadow: 0 0 38px #0ff1cebf inset; max-width: 720px; margin: 0 auto;">
+    <svg width="100%" height="400" viewBox="0 0 700 400" style="opacity: 0.95;" aria-label="Abstract NeoCity Map">
+      <rect x="20" y="40" width="180" height="100" fill="none" stroke="#0ff1ce" stroke-width="3" rx="15" ry="15"/>
+      <rect x="230" y="120" width="160" height="180" fill="none" stroke="#fcf85f" stroke-width="3" rx="15" ry="15"/>
+      <rect x="420" y="60" width="240" height="280" fill="none" stroke="#0ff1ce" stroke-width="3" rx="15" ry="15"/>
+      <!-- Some lines / roads -->
+      <line x1="50" y1="80" x2="230" y2="210" stroke="#baeaffaa" stroke-width="4"/>
+      <line x1="190" y1="170" x2="430" y2="180" stroke="#faa21faa" stroke-width="3" stroke-dasharray="12 9"/>
+      <line x1="310" y1="300" x2="510" y2="280" stroke="#79f5ffdd" stroke-width="5"/>
+      <circle cx="130" cy="90" r="11" fill="#0ff1ce"/>
+      <circle cx="420" cy="115" r="9" fill="#fcf85f"/>
+      <circle cx="635" cy="215" r="12" fill="#0ff1ce"/>
+    </svg>
+    <h3 style="color:#0ff1ce; font-family: 'Orbitron', monospace; text-align:center; margin-top: 22px;">
+      Neon Market &middot; Night District &middot; Mainframe Ruins &middot; Recruitment Hotspot
+    </h3>
+  </div>
+</section>
+
+<script>
+  /* Hex menu behavior and interaction */
+  const hexCards = document.querySelectorAll('.hex-card');
+  const sections = ['home','lore','apply','suits','guns','location'];
+  function activateHex(targetId) {
+    hexCards.forEach(card => {
+      const isActive = card.getAttribute('data-target') === targetId;
+      card.classList.toggle('active', isActive);
+      const poly = card.querySelector('.hex-shape');
+      if (poly) poly.classList.toggle('active', isActive);
+    });
+  }
+  hexCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const targetId = card.getAttribute('data-target');
+      document.getElementById(targetId).scrollIntoView({behavior: 'smooth'});
+      activateHex(targetId);
+      history.replaceState(null,'','#'+targetId);
+    });
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click();}
+    });
+  });
+  function setActiveFromHash() {
+    const hash = window.location.hash.substring(1);
+    if(sections.includes(hash)) activateHex(hash);
+    else activateHex('home');
+  }
+  window.addEventListener('hashchange', setActiveFromHash);
+  window.addEventListener('load', setActiveFromHash);
+
+  // Suits gallery (futuristic card placeholders)
+  const suitsData = {
+    hackers:[
+      'futuristic',
+      'digital',
+      'neon'
+    ],
+    bruisers:[
+      'brute',
+      'steel',
+      'razor'
+    ],
+    runners:[
+      'ghost',
+      'shadow',
+      'sprinter'
+    ]
+  };
+
+  const buttons = document.querySelectorAll('.suits-buttons button');
+  const gallery = document.getElementById('gallery');
+
+  function createSuitCard(name) {
+    const card = document.createElement('div');
+    card.className = 'suit-card';
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.classList.add('suit-icon');
+    icon.setAttribute('viewBox', '0 0 64 64');
+    // Simple hexagon shape for each suit
+    const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    poly.setAttribute('points', '32 4 60 18 60 46 32 60 4 46 4 18');
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', 'currentColor');
+    poly.setAttribute('stroke-width', '3');
+    poly.setAttribute('stroke-linejoin', 'round');
+    icon.appendChild(poly);
+    card.appendChild(icon);
+    const title = document.createElement('div');
+    title.className = 'suit-title';
+    title.textContent = name;
+    card.appendChild(title);
+    card.appendChild(Object.assign(document.createElement('div'), {
+      className: 'suit-description',
+      textContent: `Stylized futuristic ${name} gang suit, neon and tech enhanced.`
+    }));
+    return card;
+  }
+
+  function loadSuitImages(gang) {
+    gallery.innerHTML = '';
+    suitsData[gang].forEach(name => {
+      gallery.appendChild(createSuitCard(name));
+    });
+  }
+
+  loadSuitImages('hackers');
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+      loadSuitImages(button.getAttribute('data-gang'));
+    });
+  });
+
+  // Improved live preview on Apply form
+
+  const aliasInput = document.getElementById('alias');
+  const traitCards = document.querySelectorAll('.trait-card input[type="radio"]');
+  const previewOutput = document.getElementById('previewOutput');
+  const storyInput = document.getElementById('story');
+  const weaponInput = document.getElementById('weapon');
+
+  function updatePreview() {
+    let alias = aliasInput.value;
+    let trait = "";
+    traitCards.forEach(card => { if (card.checked) trait = card.value; });
+    let weapon = weaponInput.value;
+    let story = storyInput.value;
+    let out = '';
+    if (alias) out += `Alias: <span style="color:#0ff1ce">${alias}</span>`;
+    if (trait) out += ` | Trait: <span style="color:#fcf85f">${trait}</span>`;
+    if (weapon) out += ` | Preferred: <span style="color:#0ff1ce">${weapon}</span>`;
+    if (story) out += `<br/>"${story}"`;
+    previewOutput.innerHTML = out;
+  }
+  aliasInput.addEventListener('input', updatePreview);
+  traitCards.forEach(card => card.addEventListener('change', updatePreview));
+  storyInput.addEventListener('input', updatePreview);
+  weaponInput.addEventListener('change', updatePreview);
+  updatePreview();
+
+  // Submit handler for form
+  document.getElementById('recruitForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Application submitted! Welcome to the syndicate.');
+  });
+</script>
+</body>
+</html>
